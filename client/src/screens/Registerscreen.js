@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import {Link, Navigate, useNavigate, Route} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 
-const Registerscreen = (props) => {
+const Registerscreen = () => {
     const [data, setData] = useState({
         name: "",
         email: "",
@@ -10,6 +10,7 @@ const Registerscreen = (props) => {
         error: null
     });
    
+    const navigate = useNavigate();
     
     //onChange događaj pri unosu name, email i password poziva ovu f-ju
     const handleChange = e => {
@@ -24,8 +25,9 @@ const Registerscreen = (props) => {
             await axios.post('/auth/register',{name, email, password},{ headers:{
                 "Content-type": "application/json"
             }})
-           //  history.push("/login"); //prebaci nas na loginscreen //ovo ne radi
-           window.open('/login') //prebaci nas na login screen
+           
+           navigate("/login"); //prebaci nas na login screen
+           
         } catch (err) {
             setData({...data, error: err.response.data.error})
         }
@@ -55,7 +57,7 @@ const Registerscreen = (props) => {
                         <button className="btn btn-primary mt-3" onClick={handleSubmit}>Register</button>
                     </div>
                     <p className="mt-3 text-center">
-                        Already a user? <Link to="/login">Login</Link>
+                        Already a user? <Link to="/login" style={{textDecoration: 'none'}}>Login</Link>
                     </p>
                 </form>
             </div>

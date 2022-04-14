@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 const Loginscreen = () => {
     const [data, setData] = useState({
@@ -6,6 +7,8 @@ const Loginscreen = () => {
         password: '',
         error: null
     });
+
+    const navigate = useNavigate();
 
     const {email, password, error} = data;
 
@@ -20,7 +23,7 @@ const Loginscreen = () => {
             setData({...data, error:null})
          const res = await axios.post('/auth/login', {email, password}, {headers:{"Content-Type": "application/json"}})
             localStorage.setItem('token', res.data.token);//u slucaju uspješnog logovanja u localeStorage smještamo token
-            window.open('/')
+            navigate("/");
         } catch (err) {
             setData({...data, error: err.response.data.error}) 
         }
@@ -42,6 +45,9 @@ const Loginscreen = () => {
                         {error ? (<p className="text-danger">{error}</p>): null}
                         <div className="mb-2 text-center">
                             <button className="btn btn-primary" onClick={handleSubmit}>Login</button>
+                            <p className="mt-3 text-center">Not a user? 
+                                <Link to="/register" style={{textDecoration: 'none'}}> Register</Link>
+                            </p>
                         </div>
                     </form>           
                 </div>

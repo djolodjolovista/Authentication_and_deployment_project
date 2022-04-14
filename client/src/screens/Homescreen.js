@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 const Homescreen = () => {
     const [user, setUser] = useState(null);
-
-    //pozivacemo ovu f-ju svaki put kada se homescreen is mounted, zato koristimo useEffect
+    const navigate = useNavigate();
+    //pozivacemo ovu f-ju svaki put kada je homescreen is mounted, zato koristimo useEffect
     const getUser = async() => {
         const res = await axios.get('/auth', {
             headers: {
@@ -13,20 +14,23 @@ const Homescreen = () => {
         setUser(res.data)
     }
     useEffect(()=>{
+        if(!localStorage.getItem('token')){
+            
+            navigate("/login");
+         }
         getUser();
     },[])
 
     const logout = () => {
         localStorage.removeItem('token');
-        window.open('/login');
+        
+        navigate("/login");
     }
-    if(!localStorage.getItem('token')){
-        window.open('/login');
-    }
+  
     return (
         <div className="mt-5 container w-50 bg-dark text-light p-5">
             <div className="container bg-dark p-5">
-                <p className="lead">Welcome {user && user.name}</p>
+                <p className="lead"><b>Welcome {user && user.name}</b></p>
                 {user && (<button className="btn btn-danger" onClick={logout}>Logout</button>)}
                 
 
